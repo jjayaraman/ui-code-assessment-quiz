@@ -1,0 +1,13 @@
+const server = require('./server')
+const request = require('supertest')
+
+describe.skip('Test the Server', () => {
+
+    test.skip('Test the questions api', async (done) => {
+        const response = await request(server).get('/api/questions')
+        expect(response.status).toBe(200)
+        expect(response.text).toBeDefined()
+        done()
+    })
+
+})

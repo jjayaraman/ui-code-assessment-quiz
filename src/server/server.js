@@ -16,3 +16,6 @@ server.get("/api/questions", cors(), (req, res) => {
 server.listen(port, () => {
     console.log(`Server listening at ${port}`);
 });
+
+
+module.exports = server
