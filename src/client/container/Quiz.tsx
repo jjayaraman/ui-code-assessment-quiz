@@ -1,40 +1,67 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { Card } from 'primereact/card';
+import { Button } from 'primereact/button'
+import { RadioButton } from 'primereact/radiobutton'
+
 import QuizService from '../service/QuizService'
-import { Question, QuestionType } from '../types/Question'
-import Multiple from '../component/Multiple'
+import { Question } from './../types/index';
 
-export interface QuizProps { }
+export const Quiz = () => {
 
-export const Quiz = (props: QuizProps) => {
+  let service = new QuizService()
+  const [questions, setQuestions] = useState<Question[]>([])
+  const [question, setQuestion] = useState<Question>()
+  const [answer, setAnswer] = useState({})
 
-    const quizService = new QuizService()
+  useEffect(() => {
+    service.getQuestions().then(res => {
+      setQuestions(res.data.results)
+    })
+  }, [])
 
-    const [questions, setQuestions] = useState<Question[]>([])
-    const [question, setQuestion] = useState<Question>()
+  const next = () => {
 
-    useEffect(() => {
-        quizService.getQuestions().then(res => {
-            setQuestions(res.data.results)
-        })
-    }, [])
+    setQuestion(questions[Math.floor(Math.random() * 49)])
+  }
 
-    let getRandomQuestion = () => {
+  // Typescript strict mode
+  interface ChangeCheckboxEvent extends MouseEvent {
+    target: HTMLInputElement
+  }
 
+  const handleOnChange = (e: any) => {
+    const { id, value } = e.target
+    setAnswer({ id: value })
+  }
 
-        setQuestion(questions[Math.floor(Math.random() * 49)])
-        console.log(QuestionType.multiple);
+  const footer = <span>
+    <Button label="Next" onClick={next} icon="pi pi-check" style={{ marginRight: '.25em' }} />
+  </span>;
 
-        console.log('clicked..', question);
-    }
+  return (
+    <div>
+      <Card title='Question' footer={footer} >
+        <div className='content'>
 
+          <label>{question?.question}</label>
+          <br /><br />
 
-    return (
-        <div>
-            {question && question.type == QuestionType.multiple &&
-                <Multiple question={question} />}
+          {question?.type == 'multiple' &&
+            question?.incorrect_answers.map(a => {
+              return (
+                <div>
+                  <RadioButton id='multiple' onChange={handleOnChange} />
+                  <label>{a}</label>
+                </div>)
+            }
+            )}
 
-            <input type='button' onClick={getRandomQuestion} value='Next'></input>
-            Debugger ::: <pre>{JSON.stringify(question, null, 2)}</pre>
+          {question?.type == 'text' && <input id='text' type='text' onChange={handleOnChange} ></input>}
         </div>
-    )
+
+      </Card>
+
+
+    </div>
+  )
 }
