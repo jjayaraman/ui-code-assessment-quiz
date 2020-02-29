@@ -9,8 +9,6 @@ import { Question } from './../types/index';
 export const Quiz = () => {
 
   let service = new QuizService()
-  //let isRestart: boolean = false
-
 
   // Initial state
   let initialSummaryState = {
@@ -20,7 +18,7 @@ export const Quiz = () => {
     score: '0%'
   }
 
-  // State
+  // States
   const [questions, setQuestions] = useState<Question[]>([])
   const [question, setQuestion] = useState<Question>()
   const [answer, setAnswer] = useState('')
@@ -79,7 +77,6 @@ export const Quiz = () => {
   const footer = <span>
     <Button label="Next" onClick={next} style={{ marginRight: '.25em' }} />
     <Button label="Finish" onClick={finish} className="p-button-success" style={{ marginRight: '.25em' }} />
-    <Button label="Restart" onClick={restart} className="p-button-warning" style={{ marginRight: '.25em' }} />
   </span>;
 
   return (

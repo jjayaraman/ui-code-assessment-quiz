@@ -17,3 +17,11 @@ export enum QuestionType {
 export enum Difficulty {
   'easy', 'medium', 'hard'
 }
+
+
+export interface ISummary {
+  correct: number,
+  wrong: number,
+  questionsAnswered: number,
+  score: string
+}
