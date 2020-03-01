@@ -12,6 +12,7 @@ import { Row, Container, Col } from 'react-bootstrap';
 
 export const Quiz = () => {
 
+  const history = useHistory()
   let service = new QuizService()
 
   // Initial state
@@ -27,8 +28,6 @@ export const Quiz = () => {
   const [question, setQuestion] = useState<Question>()
   const [answer, setAnswer] = useState<string>('')
   const [summary, setSummary] = useState<ISummary>(initialSummaryState)
-
-  const history = useHistory()
 
   // Hook for API call
   useEffect(() => {
@@ -51,8 +50,8 @@ export const Quiz = () => {
     setQuestion(questions[Math.floor(Math.random() * 49)])     // Set next question
   }
 
+  // Finish quiz and show summary page
   const finish = () => {
-
     validateQuestions().then(sum => {
       console.log('Validation done', sum, summary);
       setSummary(sum)
@@ -61,8 +60,8 @@ export const Quiz = () => {
 
   }
 
+  // Validate the answer and update the summary
   const validateQuestions = () => new Promise<ISummary>((resolve, reject) => {
-    // Validate the answer and set the summary
     let tempSummary = { ...summary }
     tempSummary.questionsAnswered = tempSummary.questionsAnswered + 1
     if (question?.correct_answer.trim().toLowerCase() === answer?.trim().toLowerCase()) {
