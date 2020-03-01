@@ -4,6 +4,11 @@ import { Button } from 'primereact/button'
 import { Container, Row, Col } from 'react-bootstrap'
 import { ISummary } from './../types/index'
 
+/**
+ * Functional component for Summary 
+ * 
+ * @author Jayakumar Jayaraman 
+ */
 export const Summary = (props: any) => {
 
     const summary: ISummary = props.history.location.state

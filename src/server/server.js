@@ -9,6 +9,7 @@ const port = 4000;
 
 // GET question endpoint
 server.get("/api/questions", cors(), (req, res) => {
+    res.setHeader('Content-Type', 'application/json');
     res.json(data);
 });
 

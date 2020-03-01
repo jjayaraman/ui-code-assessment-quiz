@@ -1,5 +1,10 @@
+/**
+ * Type definitions for the Quiz
+ * 
+ * @author Jayakumar Jayaraman
+ * 
+ */
 export interface Question {
-
   category: string,
   type: QuestionType,
   difficulty: Difficulty,
@@ -17,7 +22,6 @@ export enum QuestionType {
 export enum Difficulty {
   'easy', 'medium', 'hard'
 }
-
 
 export interface ISummary {
   correct: number,

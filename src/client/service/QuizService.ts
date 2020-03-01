@@ -1,6 +1,10 @@
 import axios from 'axios'
-import { Question } from '../types';
 
+/**
+ * Quiz service to call the API
+ * 
+ * @author Jayakumar Jayraman
+ */
 export default class QuizService {
 
   getQuestions(): Promise<any> {

@@ -1,16 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import { Card } from 'primereact/card';
-import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
-import { RadioButton } from 'primereact/radiobutton'
-
+import { Row, Container, Col } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom'
 import QuizService from '../service/QuizService'
 import { Question, ISummary } from './../types/index';
-
-import { useHistory } from 'react-router-dom'
-import { Row, Container, Col } from 'react-bootstrap';
+import Multiple from '../component/Multiple';
+import BooleanQuestion from '../component/BooleanQuestion';
+import TextQuestion from '../component/TextQuestion';
 import * as yup from 'yup'
+const unescape = require('recursive-unescape');
+//import { unescape } from './../utils/Utils'
 
+
+/**
+ * Container component for Quiz
+ * 
+ * @author Jayakumar Jayaraman * 
+ */
 export const Quiz = () => {
 
   const history = useHistory()
@@ -35,14 +42,15 @@ export const Quiz = () => {
   useEffect(() => {
     service.getQuestions().then(res => {
       const questions = res.data.results
-      setQuestions(questions)
-      setQuestion(questions[Math.floor(Math.random() * 49)])
+      setQuestions(unescape(questions))
+      setQuestion(unescape(questions)[Math.floor(Math.random() * 49)])
     })
   }, [])
 
   // handle onChange events
   const handleOnChange = (e: any) => {
-    const { id, value } = e.target
+    const { value } = e.target
+
     setAnswer(value)
     if (value) {
       setError('')
@@ -118,43 +126,16 @@ export const Quiz = () => {
             </Row>
             <br />
 
-            {question?.type == 'multiple' &&
-              question?.incorrect_answers.concat(question.correct_answer).sort().map(a => {
-                return (
-                  <div key={a}>
-                    <Row>
-                      <Col lg={1}>
-                        <RadioButton id='multiple' onChange={handleOnChange} value={a} checked={answer === a} />
-                      </Col>
-                      <Col lg={11}>
-                        <label>{a}</label>
-                      </Col>
-                    </Row>
-                  </div>)
-              })
+            {question?.type === 'multiple' &&
+              <Multiple question={question} answer={answer} handleOnChange={handleOnChange} />
             }
 
-            {question?.type == 'boolean' &&
-              <div>
-                <Row>
-                  <Col lg={1}><RadioButton onChange={handleOnChange} value={'true'} checked={answer === 'true'} /></Col>
-                  <Col lg={11}><label>True</label> </Col>
-                </Row>
-
-                <Row>
-                  <Col lg={1}>
-                    <RadioButton onChange={handleOnChange} value={'false'} checked={answer === 'false'} /> </Col>
-                  <Col lg={11}><label>False</label> </Col>
-                </Row>
-              </div>
+            {question?.type === 'boolean' &&
+              <BooleanQuestion answer={answer} handleOnChange={handleOnChange} />
             }
 
-            {question?.type == 'text' &&
-              <Row>
-                <Col lg={12}>
-                  <InputText onChange={handleOnChange} style={{ width: '100%' }} />
-                </Col>
-              </Row>
+            {question?.type === 'text' &&
+              <TextQuestion handleOnChange={handleOnChange} />
             }
             <Row>
               <Col lg={12} className='error'> {error}</Col>
@@ -164,12 +145,12 @@ export const Quiz = () => {
         </div>
       </Card>
 
-      {/*
+      {/* 
       Debugger:::
-    <pre>{JSON.stringify(question, null, 2)}</pre> 
+    <pre>{JSON.stringify(question, null, 2)}</pre>
       <pre>{JSON.stringify(answer, null, 2)}</pre>
-       <pre>{JSON.stringify(summary, null, 2)}</pre> 
-      <pre>{JSON.stringify(error, null, 2)}</pre>*/}
+      <pre>{JSON.stringify(summary, null, 2)}</pre>
+      <pre>{JSON.stringify(error, null, 2)}</pre> */}
     </div >
   )
 }
