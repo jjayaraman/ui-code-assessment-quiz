@@ -9,6 +9,7 @@ import { Question, ISummary } from './../types/index';
 
 import { useHistory } from 'react-router-dom'
 import { Row, Container, Col } from 'react-bootstrap';
+import * as yup from 'yup'
 
 export const Quiz = () => {
 
@@ -28,6 +29,7 @@ export const Quiz = () => {
   const [question, setQuestion] = useState<Question>()
   const [answer, setAnswer] = useState<string>('')
   const [summary, setSummary] = useState<ISummary>(initialSummaryState)
+  const [error, setError] = useState<String>('')
 
   // Hook for API call
   useEffect(() => {
@@ -42,38 +44,62 @@ export const Quiz = () => {
   const handleOnChange = (e: any) => {
     const { id, value } = e.target
     setAnswer(value)
+    if (value) {
+      setError('')
+    }
   }
 
   // Next button action
   const next = () => {
-    validateQuestions()
-    setQuestion(questions[Math.floor(Math.random() * 49)])     // Set next question
+    validateQuestions().then(res => {
+      setQuestion(questions[Math.floor(Math.random() * 49)])     // Set next question
+    }).catch(err => {
+    })
   }
 
   // Finish quiz and show summary page
   const finish = () => {
     validateQuestions().then(sum => {
-      console.log('Validation done', sum, summary);
+      //      console.log('Validation done', sum, summary);
       setSummary(sum)
       history.push('/summary', sum)
     })
+      .catch(err => {
+      })
 
   }
 
+  // Yup schema for form validation
+  let yupSchema = yup.object().shape(
+    { answer: yup.string().required('Answer is required.') }
+  )
+
+
   // Validate the answer and update the summary
   const validateQuestions = () => new Promise<ISummary>((resolve, reject) => {
-    let tempSummary = { ...summary }
-    tempSummary.questionsAnswered = tempSummary.questionsAnswered + 1
-    if (question?.correct_answer.trim().toLowerCase() === answer?.trim().toLowerCase()) {
-      tempSummary.correct = tempSummary.correct + 1
-    }
-    else {
-      tempSummary.wrong = tempSummary.wrong + 1
-    }
-    tempSummary.score = ((tempSummary.correct / tempSummary.questionsAnswered) * 100).toFixed(0) + '%'
-    setSummary((previousState) => ({ ...previousState, ...tempSummary }))
-    console.log('Summary :', summary, tempSummary);
-    resolve(tempSummary)
+
+    // Form validation using Yup
+    yupSchema.validate({ answer }).then(res => {
+      let tempSummary = { ...summary }
+      tempSummary.questionsAnswered = tempSummary.questionsAnswered + 1
+      if (question?.correct_answer.trim().toLowerCase() === answer?.trim().toLowerCase()) {
+        tempSummary.correct = tempSummary.correct + 1
+      }
+      else {
+        tempSummary.wrong = tempSummary.wrong + 1
+      }
+      tempSummary.score = ((tempSummary.correct / tempSummary.questionsAnswered) * 100).toFixed(0) + '%'
+      setSummary((previousState) => ({ ...previousState, ...tempSummary }))
+      setAnswer('')
+      setError('')
+      //console.log('Summary :', summary, tempSummary);
+      resolve(tempSummary)
+    })
+      .catch(err => {
+        setError('Please answer the question.')
+        reject(err)
+      })
+
   })
 
 
@@ -88,7 +114,7 @@ export const Quiz = () => {
         <div className='content'>
           <Container>
             <Row>
-              <Col lg={12}><label>{question?.question}</label> </Col>
+              <Col lg={12}><label className='required'>{question?.question}</label> </Col>
             </Row>
             <br />
 
@@ -130,17 +156,20 @@ export const Quiz = () => {
                 </Col>
               </Row>
             }
+            <Row>
+              <Col lg={12} className='error'> {error}</Col>
+            </Row>
 
           </Container>
         </div>
       </Card>
 
-
-      {/*    Debugger:::
-   <pre>{JSON.stringify(question, null, 2)}</pre>
-      <pre>{JSON.stringify(answer, null, 2)}</pre> 
-      <pre>{JSON.stringify(summary, null, 2)}</pre> */}
-
+      {/*
+      Debugger:::
+    <pre>{JSON.stringify(question, null, 2)}</pre> 
+      <pre>{JSON.stringify(answer, null, 2)}</pre>
+       <pre>{JSON.stringify(summary, null, 2)}</pre> 
+      <pre>{JSON.stringify(error, null, 2)}</pre>*/}
     </div >
   )
 }

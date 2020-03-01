@@ -2,3 +2,12 @@
     width: 600px;
     height: 200px;
 }
+
+.required::after {
+    color: red;
+    content: ' *';
+}
+
+.error {
+    color: red;
+}

@@ -1,23 +1,19 @@
 import React from 'react'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
-import { ISummary } from './../types/index'
 import { Container, Row, Col } from 'react-bootstrap'
-
-//import { useHistory, useLocation, useParams, useRouteMatch } from 'react-router-dom'
-
+import { ISummary } from './../types/index'
 
 export const Summary = (props: any) => {
 
-    //    const location = useLocation()
-    const summary = props.history.location.state
+    const summary: ISummary = props.history.location.state
 
     const home = () => {
         props.history.push('/')
     }
 
     const footer = <span>
-        <Button label="Restart" onClick={home} />
+        <Button label="Restart Quiz" onClick={home} />
     </span>;
 
     return (
