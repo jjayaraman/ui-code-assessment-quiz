@@ -21,7 +21,7 @@ const renderMultiple = (props) => {
 }
 
 
-xit('should render the multiple component', () => {
+it('should render the multiple component', () => {
   const { findByTestId, debug } = render(renderMultiple())
 
   expect(true).toBeTruthy()
