@@ -2,20 +2,50 @@ import React from 'react'
 import { Card } from 'primereact/card'
 import { Button } from 'primereact/button'
 import { ISummary } from './../types/index'
+import { Container, Row, Col } from 'react-bootstrap'
 
-export const Summary = (props) => {
-    const { summary } = props
+//import { useHistory, useLocation, useParams, useRouteMatch } from 'react-router-dom'
+
+
+export const Summary = (props: any) => {
+
+    //    const location = useLocation()
+    const summary = props.history.location.state
+
+    const home = () => {
+        props.history.push('/')
+    }
+
+    const footer = <span>
+        <Button label="Restart" onClick={home} />
+    </span>;
+
     return (
         <div>
-            <Card title='Summary'  >
+            <Card title='SUMMARY' footer={footer} >
                 <div className='content'>
-                    <br />
-                    <label>Correct</label> {summary.correct}
-                    <label>Wrong</label> {summary.wrong}
-                    <label>Questions Answered</label> {summary.questionsAnswered}
-                    <label>Score</label> {summary.score}
 
-                    <Button label="Restart" onClick={props.restart} className="p-button-warning" />
+                    <br />
+                    <Container>
+                        <Row>
+                            <Col lg={6}><label>Correct</label> </Col>
+                            <Col lg={6}>{summary.correct}</Col>
+                        </Row>
+                        <Row>
+                            <Col lg={6}><label>Wrong</label> </Col>
+                            <Col lg={6}>{summary.wrong}</Col>
+                        </Row>
+                        <Row>
+                            <Col lg={6}><label>Questions Answered</label> </Col>
+                            <Col lg={6}>{summary.questionsAnswered}</Col>
+                        </Row>
+                        <Row>
+                            <Col lg={6}><label>Final Score</label> </Col>
+                            <Col lg={6}>{summary.score}</Col>
+                        </Row>
+
+                    </Container>
+
                 </div>
             </Card>
         </div>
