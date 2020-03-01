@@ -20,7 +20,9 @@ export enum QuestionType {
 }
 
 export enum Difficulty {
-  'easy', 'medium', 'hard'
+  easy = 'easy',
+  medium = 'medium',
+  hard = 'hard'
 }
 
 export interface ISummary {

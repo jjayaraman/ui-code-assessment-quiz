@@ -16,7 +16,7 @@ const unescape = require('recursive-unescape');
 /**
  * Container component for Quiz
  * 
- * @author Jayakumar Jayaraman * 
+ * @author Jayakumar Jayaraman 
  */
 export const Quiz = () => {
 
@@ -120,28 +120,30 @@ export const Quiz = () => {
     <div>
       <Card title='Question' footer={footer} >
         <div className='content'>
-          <Container>
-            <Row>
-              <Col lg={12}><label className='required'>{question?.question}</label> </Col>
-            </Row>
-            <br />
+          <form data-testid='quizForm' >
+            <Container>
+              <Row>
+                <Col lg={12}><label className='required'>{question?.question}</label> </Col>
+              </Row>
+              <br />
 
-            {question?.type === 'multiple' &&
-              <Multiple question={question} answer={answer} handleOnChange={handleOnChange} />
-            }
+              {question?.type === 'multiple' &&
+                <Multiple question={question} answer={answer} handleOnChange={handleOnChange} />
+              }
 
-            {question?.type === 'boolean' &&
-              <BooleanQuestion answer={answer} handleOnChange={handleOnChange} />
-            }
+              {question?.type === 'boolean' &&
+                <BooleanQuestion answer={answer} handleOnChange={handleOnChange} />
+              }
 
-            {question?.type === 'text' &&
-              <TextQuestion handleOnChange={handleOnChange} />
-            }
-            <Row>
-              <Col lg={12} className='error'> {error}</Col>
-            </Row>
+              {question?.type === 'text' &&
+                <TextQuestion handleOnChange={handleOnChange} />
+              }
+              <Row>
+                <Col lg={12} className='error'> {error}</Col>
+              </Row>
 
-          </Container>
+            </Container>
+          </form>
         </div>
       </Card>
 
